@@ -7,23 +7,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --black: #060608;
-    --deep: #0d0b14;
-    --surface: #12101a;
-    --card: #1a1726;
-    --border: rgba(255,255,255,0.07);
+    --black: #f7f8fc;
+    --deep: #eef1fb;
+    --surface: #ffffff;
+    --card: #f3f5fb;
+    --border: rgba(17,24,39,0.10);
+
     --purple: #7c3aed;
-    --purple-light: #9d6ff5;
-    --purple-glow: rgba(124,58,237,0.25);
+    --purple-light: #8b5cf6;
+    --purple-glow: rgba(124,58,237,0.14);
+
     --red: #e02060;
-    --red-glow: rgba(224,32,96,0.2);
-    --white: #f5f3ff;
-    --grey: #8b87a0;
+    --red-glow: rgba(224,32,96,0.14);
+
+    --white: #111827;
+    --grey: #5f6472;
+
     --font-display: 'Bebas Neue', sans-serif;
     --font-head: 'Syne', sans-serif;
     --font-body: 'DM Sans', sans-serif;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
@@ -502,6 +505,288 @@
     .footer { padding: 40px 24px 24px; }
     .divider { margin: 0 24px; }
   }
+
+
+  /* ─── LIGHT THEME OVERRIDES ─────────────────────────────── */
+  body {
+    background: #f7f8fc;
+    color: #111827;
+  }
+
+  ::-webkit-scrollbar-track { background: #f7f8fc; }
+
+  nav {
+    height: 72px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(17,24,39,0.08);
+    box-shadow: 0 8px 30px rgba(17,24,39,0.06);
+  }
+
+  .nav-logo { color: #111827; }
+  .nav-logo span { color: var(--purple); }
+
+  .nav-link { color: #5f6472; }
+  .nav-link:hover {
+    color: #111827;
+    background: rgba(124,58,237,0.08);
+  }
+  .nav-link.active {
+    color: var(--purple);
+    background: rgba(124,58,237,0.12);
+  }
+
+  .hero {
+    background: #ffffff;
+    padding-top: 72px;
+  }
+
+  .hero-bg img {
+    filter: brightness(1.12) contrast(1.04) saturate(1.04);
+  }
+
+  .hero-eyebrow {
+    color: var(--purple);
+    background: rgba(124,58,237,0.08);
+    border: 1px solid rgba(124,58,237,0.22);
+  }
+
+  .hero-sub {
+    color: #4b5563;
+  }
+
+  .btn-primary {
+    background: var(--purple);
+    color: #ffffff;
+    box-shadow: 0 12px 34px rgba(124,58,237,0.26);
+  }
+
+  .btn-primary:hover {
+    background: var(--purple-light);
+    box-shadow: 0 16px 40px rgba(124,58,237,0.30);
+  }
+
+  .btn-ghost {
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid rgba(17,24,39,0.12);
+    box-shadow: 0 8px 24px rgba(17,24,39,0.05);
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(124,58,237,0.35);
+    background: rgba(124,58,237,0.06);
+  }
+
+  .pill {
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(17,24,39,0.10);
+    box-shadow: 0 10px 26px rgba(17,24,39,0.06);
+    color: #111827;
+  }
+
+  section {
+    background: #f7f8fc;
+  }
+
+  .section-title {
+    color: #111827;
+  }
+
+  .section-title .accent,
+  .section-title .red {
+    color: var(--purple);
+  }
+
+  .section-eyebrow {
+    color: var(--purple);
+  }
+
+  .section-lead,
+  .flow-step p,
+  .tech-card p,
+  .product-card p,
+  .team-card p,
+  .value-card p,
+  .story-text p,
+  .timeline-event,
+  .footer-desc,
+  .footer-copy,
+  .footer-legal span,
+  .footer-col h4,
+  .form-label,
+  .pricing-card .price-note {
+    color: #5f6472;
+  }
+
+  .comparison-section,
+  .story-section,
+  .values-section,
+  .pricing-section,
+  .products-hero,
+  .about-hero {
+    background: #eef1fb !important;
+  }
+
+  .comparison-img {
+    background: #ffffff;
+    border: 1px solid rgba(17,24,39,0.10);
+    box-shadow: 0 24px 70px rgba(17,24,39,0.14);
+    filter: brightness(1.08) contrast(1.04) saturate(1.05);
+  }
+
+  .stats-bar {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    color: #ffffff;
+  }
+
+  .flow-steps {
+    border: 1px solid rgba(17,24,39,0.10);
+    gap: 14px;
+    border-radius: 20px;
+    overflow: visible;
+  }
+
+  .flow-step,
+  .tech-card,
+  .product-card,
+  .pricing-card,
+  .team-card,
+  .value-card,
+  .story-visual {
+    background: #ffffff !important;
+    border: 1px solid rgba(17,24,39,0.09) !important;
+    box-shadow: 0 16px 42px rgba(17,24,39,0.07) !important;
+  }
+
+  .flow-step:hover,
+  .tech-card:hover,
+  .product-card:hover,
+  .pricing-card:hover,
+  .team-card:hover,
+  .value-card:hover {
+    border-color: rgba(124,58,237,0.30) !important;
+    box-shadow: 0 22px 54px rgba(17,24,39,0.10) !important;
+  }
+
+  .flow-step-num {
+    color: rgba(124,58,237,0.18);
+  }
+
+  .flow-arrow {
+    background: #ffffff;
+    color: var(--purple);
+    border: 1px solid rgba(124,58,237,0.22);
+    box-shadow: 0 8px 18px rgba(17,24,39,0.08);
+  }
+
+  .spec-table {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 16px 42px rgba(17,24,39,0.07);
+  }
+
+  .spec-table th {
+    color: #5f6472;
+    border-bottom: 1px solid rgba(17,24,39,0.08);
+    background: #f3f5fb;
+  }
+
+  .spec-table td {
+    color: #111827;
+    border-bottom: 1px solid rgba(17,24,39,0.08);
+  }
+
+  .spec-table tr:hover td {
+    background: #f8f9ff;
+  }
+
+  .spec-badge,
+  .product-card-tag {
+    color: var(--purple);
+    background: rgba(124,58,237,0.09);
+    border: 1px solid rgba(124,58,237,0.18);
+  }
+
+  .product-feature::before {
+    background: rgba(124,58,237,0.12);
+    color: var(--purple);
+  }
+
+  .pricing-card.featured {
+    background: linear-gradient(145deg, rgba(124,58,237,0.08), #ffffff) !important;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid rgba(17,24,39,0.12);
+    box-shadow: 0 8px 24px rgba(17,24,39,0.04);
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: #9ca3af;
+  }
+
+  .form-select option {
+    background: #ffffff;
+    color: #111827;
+  }
+
+  .star {
+    color: rgba(17,24,39,0.18);
+  }
+
+  .star.active {
+    color: #f59e0b;
+  }
+
+  footer {
+    background: #ffffff;
+    border-top: 1px solid rgba(17,24,39,0.08);
+  }
+
+  .footer-brand,
+  .footer-col a {
+    color: #111827;
+  }
+
+  .footer-brand span {
+    color: var(--purple);
+  }
+
+  .footer-col a:hover,
+  .footer-legal span:hover {
+    color: var(--purple);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(17,24,39,0.08);
+  }
+
+  .divider {
+    background: rgba(17,24,39,0.08);
+  }
+
+  .team-avatar {
+    color: #ffffff;
+  }
+
+  .timeline-dot {
+    background: var(--purple);
+    box-shadow: 0 0 14px rgba(124,58,237,0.4);
+  }
+
+  @media (max-width: 900px) {
+    nav {
+      background: rgba(255,255,255,0.96);
+    }
+  }
+
 </style>
 </head>
 <body>
