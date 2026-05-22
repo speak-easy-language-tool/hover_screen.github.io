@@ -1,64 +1,1240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HoverScreen Cinema</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HoverLens — See the movie. Not the subtitles.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #060608;
+    --deep: #0d0b14;
+    --surface: #12101a;
+    --card: #1a1726;
+    --border: rgba(255,255,255,0.07);
+    --purple: #7c3aed;
+    --purple-light: #9d6ff5;
+    --purple-glow: rgba(124,58,237,0.25);
+    --red: #e02060;
+    --red-glow: rgba(224,32,96,0.2);
+    --white: #f5f3ff;
+    --grey: #8b87a0;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  /* ─── SCROLLBAR ─────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 2px; }
+
+  /* ─── PAGES ─────────────────────────────────────────────── */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ─── NAV ────────────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 68px;
+    background: rgba(6,6,8,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-head);
+    font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em;
+    cursor: pointer; color: var(--white);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-logo span { color: var(--purple-light); }
+
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-link {
+    font-family: var(--font-body); font-size: 0.82rem; font-weight: 500;
+    color: var(--grey); padding: 8px 16px; border-radius: 8px;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em;
+    text-transform: uppercase; border: none; background: none;
+  }
+  .nav-link:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+  .nav-link.active { color: var(--white); background: rgba(124,58,237,0.15); }
+
+  .nav-cta {
+    font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+    color: var(--white); padding: 9px 22px; border-radius: 8px;
+    cursor: pointer; letter-spacing: 0.03em; text-transform: uppercase;
+    border: 1px solid var(--purple); background: var(--purple);
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: var(--purple-light); border-color: var(--purple-light); transform: translateY(-1px); }
+
+  /* ─── HERO ────────────────────────────────────────────────── */
+  #page-home { position: relative; }
+
+  .hero {
+  position: relative;
+  min-height: auto;
+  padding-top: 68px;
+  background: var(--black);
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: relative;
+  inset: auto;
+  z-index: 0;
+}
+
+.hero-bg img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.hero-bg::after {
+  display: none;
+}
+
+  .hero-content {
+    position: relative; z-index: 1;
+    padding: 140px 80px 80px;
+    max-width: 720px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--purple-light);
+    margin-bottom: 28px;
+    padding: 6px 14px; border: 1px solid rgba(157,111,245,0.3);
+    border-radius: 100px; background: rgba(124,58,237,0.08);
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--purple-light); animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(157,111,245,0.5); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(157,111,245,0); }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 8vw, 8rem);
+    line-height: 0.92; letter-spacing: 0.01em;
+    margin-bottom: 8px;
+  }
+  .hero-title .accent { color: var(--purple-light); }
+
+  .hero-sub {
+    font-size: 1.15rem; color: rgba(245,243,255,0.6);
+    line-height: 1.6; max-width: 480px; margin: 24px 0 44px;
+    font-weight: 300;
+  }
+
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .btn-primary {
+    padding: 14px 36px; border-radius: 10px; font-size: 0.9rem;
+    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    background: var(--purple); color: #fff; border: none; cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 0 40px rgba(124,58,237,0.4);
+  }
+  .btn-primary:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 8px 50px rgba(124,58,237,0.5); }
+
+  .btn-ghost {
+    padding: 14px 36px; border-radius: 10px; font-size: 0.9rem;
+    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    background: transparent; color: var(--white);
+    border: 1px solid rgba(255,255,255,0.18); cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+
+  /* Hero pills */
+  .hero-pills {
+    position: absolute; bottom: 60px; left: 80px; z-index: 1;
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: 100px;
+    background: rgba(26,23,38,0.8); border: 1px solid var(--border);
+    backdrop-filter: blur(12px); font-size: 0.8rem; font-weight: 500;
+  }
+  .pill-icon { font-size: 1rem; }
+
+  /* ─── SECTION GLOBALS ────────────────────────────────────── */
+  section { padding: 100px 80px; }
+
+  .section-eyebrow {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--purple-light);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--font-head); font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1; letter-spacing: -0.02em;
+  }
+  .section-title .accent { color: var(--purple-light); }
+  .section-title .red { color: var(--red); }
+
+  .section-lead {
+    font-size: 1.05rem; color: var(--grey); line-height: 1.7;
+    max-width: 560px; margin-top: 16px; font-weight: 300;
+  }
+
+  /* ─── COMPARISON (HOME) ──────────────────────────────────── */
+  .comparison-section { background: var(--deep); padding: 100px 80px; }
+  .comparison-img {
+    width: 100%; border-radius: 20px;
+    border: 1px solid var(--border);
+    margin-top: 48px;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+  }
+
+  /* ─── HOW IT WORKS ───────────────────────────────────────── */
+  .flow-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px; margin-top: 60px;
+    border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden;
+  }
+  .flow-step {
+    background: var(--surface); padding: 40px 32px;
+    position: relative; transition: background 0.3s;
+  }
+  .flow-step:hover { background: var(--card); }
+  .flow-step-num {
+    font-family: var(--font-display); font-size: 4rem; color: rgba(124,58,237,0.15);
+    line-height: 1; margin-bottom: 20px;
+  }
+  .flow-step-icon { font-size: 1.8rem; margin-bottom: 14px; }
+  .flow-step h3 { font-family: var(--font-head); font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+  .flow-step p { font-size: 0.85rem; color: var(--grey); line-height: 1.6; }
+  .flow-arrow {
+    position: absolute; right: -14px; top: 50%; transform: translateY(-50%);
+    z-index: 2; width: 28px; height: 28px; background: var(--black);
+    border: 1px solid var(--border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; color: var(--purple-light);
+  }
+  .flow-step:last-child .flow-arrow { display: none; }
+
+  /* ─── STATS BAR ──────────────────────────────────────────── */
+  .stats-bar {
+    background: linear-gradient(135deg, var(--purple) 0%, #3b1fa3 100%);
+    padding: 60px 80px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 40px; text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display); font-size: 3.5rem;
+    line-height: 1; margin-bottom: 6px;
+  }
+  .stat-label { font-size: 0.82rem; opacity: 0.75; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ─── TECH PAGE ──────────────────────────────────────────── */
+  .tech-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 60px;
+  }
+  .tech-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px; transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .tech-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--red));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .tech-card:hover { border-color: rgba(124,58,237,0.3); transform: translateY(-4px); }
+  .tech-card:hover::before { opacity: 1; }
+  .tech-card-icon { font-size: 2.2rem; margin-bottom: 20px; }
+  .tech-card h3 { font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; margin-bottom: 10px; }
+  .tech-card p { font-size: 0.88rem; color: var(--grey); line-height: 1.65; }
+
+  .tech-card-wide {
+    grid-column: span 2;
+    display: grid; grid-template-columns: 1fr 2fr; gap: 40px; align-items: center;
+  }
+
+  .spec-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+  .spec-table th {
+    font-family: var(--font-head); font-weight: 700; font-size: 0.78rem;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey);
+    padding: 12px 20px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-table td {
+    padding: 16px 20px; font-size: 0.9rem; border-bottom: 1px solid var(--border);
+  }
+  .spec-table tr:last-child td { border-bottom: none; }
+  .spec-table tr:hover td { background: var(--card); }
+  .spec-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+    background: rgba(124,58,237,0.15); color: var(--purple-light);
+    border: 1px solid rgba(124,58,237,0.2);
+  }
+
+  /* ─── PRODUCTS PAGE ──────────────────────────────────────── */
+  .products-hero {
+    background: var(--deep); padding: 140px 80px 80px;
+    text-align: center;
+  }
+
+  .product-cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    padding: 0 80px 80px;
+  }
+  .product-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 48px; transition: all 0.3s;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .product-card:hover { border-color: var(--purple); transform: translateY(-6px); box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
+  .product-card-tag {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--purple-light);
+    padding: 5px 12px; border-radius: 100px;
+    background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2);
+    width: fit-content;
+  }
+  .product-card h2 { font-family: var(--font-head); font-weight: 800; font-size: 1.8rem; }
+  .product-card p { font-size: 0.9rem; color: var(--grey); line-height: 1.7; }
+  .product-card-features { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .product-feature {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.85rem;
+  }
+  .product-feature::before {
+    content: '✓'; width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(124,58,237,0.2); color: var(--purple-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+    text-align: center; line-height: 20px;
+  }
+
+  /* Pricing */
+  .pricing-section { background: var(--deep); padding: 80px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 50px; }
+  .pricing-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px; transition: all 0.3s;
+  }
+  .pricing-card.featured {
+    border-color: var(--purple);
+    background: linear-gradient(145deg, rgba(124,58,237,0.1), var(--surface));
+    position: relative;
+  }
+  .pricing-card.featured::before {
+    content: 'RECOMMENDED';
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+    background: var(--purple); color: white; padding: 4px 14px;
+    border-radius: 100px;
+  }
+  .pricing-card h3 { font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; margin-bottom: 10px; }
+  .pricing-card .price { font-family: var(--font-display); font-size: 3rem; margin: 16px 0 4px; }
+  .pricing-card .price-note { font-size: 0.8rem; color: var(--grey); margin-bottom: 24px; }
+
+  /* ─── FEEDBACK PAGE ──────────────────────────────────────── */
+  .feedback-wrap { max-width: 680px; margin: 0 auto; padding: 140px 40px 80px; }
+  .feedback-form { display: flex; flex-direction: column; gap: 20px; margin-top: 48px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--grey); }
+  .form-input, .form-textarea, .form-select {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; color: var(--white);
+    font-family: var(--font-body); font-size: 0.92rem;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--purple); }
+  .form-textarea { resize: vertical; min-height: 140px; }
+  .form-select option { background: var(--surface); }
+
+  .stars { display: flex; gap: 6px; }
+  .star { font-size: 1.6rem; cursor: pointer; transition: transform 0.15s; color: rgba(255,255,255,0.15); }
+  .star.active { color: #fbbf24; }
+  .star:hover { transform: scale(1.2); }
+
+  .form-submit {
+    padding: 16px 40px; border-radius: 10px; font-family: var(--font-body);
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; background: var(--purple); color: #fff;
+    border: none; cursor: pointer; transition: all 0.25s; width: 100%;
+    margin-top: 8px;
+    box-shadow: 0 0 40px rgba(124,58,237,0.3);
+  }
+  .form-submit:hover { background: var(--purple-light); transform: translateY(-2px); }
+
+  .success-msg {
+    text-align: center; padding: 60px 40px; display: none;
+  }
+  .success-msg.show { display: block; }
+  .success-icon { font-size: 4rem; margin-bottom: 20px; }
+
+  /* ─── ABOUT PAGE ─────────────────────────────────────────── */
+  .about-hero {
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, var(--purple-glow), transparent);
+    padding: 140px 80px 80px; text-align: center;
+  }
+
+  .story-section { padding: 80px; background: var(--deep); }
+  .story-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .story-text p { font-size: 1rem; color: var(--grey); line-height: 1.85; margin-bottom: 20px; }
+  .story-visual {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 48px;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .timeline-item { display: flex; gap: 20px; }
+  .timeline-dot {
+    width: 12px; height: 12px; border-radius: 50%; background: var(--purple);
+    margin-top: 5px; flex-shrink: 0;
+    box-shadow: 0 0 12px var(--purple);
+  }
+  .timeline-year { font-family: var(--font-head); font-weight: 700; font-size: 0.85rem; color: var(--purple-light); }
+  .timeline-event { font-size: 0.88rem; color: var(--grey); margin-top: 2px; }
+
+  .team-section { padding: 80px; }
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .team-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px; text-align: center; transition: all 0.3s;
+  }
+  .team-card:hover { border-color: rgba(124,58,237,0.3); transform: translateY(-4px); }
+  .team-avatar {
+    width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+  }
+  .team-card h3 { font-family: var(--font-head); font-weight: 700; font-size: 1.05rem; }
+  .team-card .role { font-size: 0.78rem; color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.08em; margin: 6px 0 12px; }
+  .team-card p { font-size: 0.83rem; color: var(--grey); line-height: 1.6; }
+
+  .values-section { background: var(--deep); padding: 80px; }
+  .values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 48px; }
+  .value-card {
+    padding: 32px 24px; border: 1px solid var(--border); border-radius: 14px;
+    text-align: center; transition: all 0.3s; background: var(--surface);
+  }
+  .value-card:hover { border-color: var(--purple); }
+  .value-icon { font-size: 2.2rem; margin-bottom: 16px; }
+  .value-card h4 { font-family: var(--font-head); font-weight: 700; margin-bottom: 8px; }
+  .value-card p { font-size: 0.82rem; color: var(--grey); line-height: 1.6; }
+
+  /* ─── FOOTER ─────────────────────────────────────────────── */
+  footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 60px 80px 32px;
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand { font-family: var(--font-head); font-weight: 800; font-size: 1.2rem; margin-bottom: 12px; }
+  .footer-brand span { color: var(--purple-light); }
+  .footer-desc { font-size: 0.85rem; color: var(--grey); line-height: 1.7; max-width: 280px; }
+  .footer-col h4 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 0.85rem; color: rgba(245,243,255,0.6); margin-bottom: 10px; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.78rem; color: var(--grey); }
+  .footer-legal { display: flex; gap: 24px; }
+  .footer-legal span { font-size: 0.78rem; color: var(--grey); cursor: pointer; }
+  .footer-legal span:hover { color: var(--white); }
+
+  /* ─── DIVIDER ─────────────────────────────────────────────── */
+  .divider { height: 1px; background: var(--border); margin: 0 80px; }
+
+  /* ─── ANIMATIONS ─────────────────────────────────────────── */
+  .fade-up {
+    opacity: 0; transform: translateY(30px);
+    animation: fadeUp 0.7s ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+
+  /* ─── RESPONSIVE ─────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { gap: 0; }
+    .nav-link { padding: 8px 10px; font-size: 0.75rem; }
+    section, .pricing-section, .story-section, .team-section, .values-section { padding: 60px 24px; }
+    .hero-content { padding: 140px 24px 80px; }
+    .hero-pills { left: 24px; bottom: 40px; }
+    .flow-steps { grid-template-columns: 1fr 1fr; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .tech-card-wide { grid-column: span 1; grid-template-columns: 1fr; }
+    .story-layout, .product-cards { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .values-grid { grid-template-columns: 1fr 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; padding: 40px 24px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .products-hero { padding: 140px 24px 60px; }
+    .product-cards { padding: 0 24px 60px; }
+    .footer { padding: 40px 24px 24px; }
+    .divider { margin: 0 24px; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- HERO SECTION -->
+<!-- ═══════════════════════════════════════════════════════════ NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">Hover<span>Lens</span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('tech')">Technology</button>
+    <button class="nav-link" onclick="showPage('products')">Products</button>
+    <button class="nav-link" onclick="showPage('about')">About</button>
+    <button class="nav-link" onclick="showPage('feedback')">Feedback</button>
+  </div>
+  <button class="nav-cta" onclick="showPage('feedback')">Partner with us</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════ HOME -->
+<div id="page-home" class="page active">
+  <!-- HERO -->
   <section class="hero">
-    <div class="overlay"></div>
+    <div class="hero-bg">
+      <img src="hero.png" alt="HoverLens hero">
+    </div>
 
-    <nav class="navbar">
-      <h1 class="logo">HoverScreen</h1>
+      <div class="hero-eyebrow fade-up">AR Subtitle Technology · Made in France</div>
+      <div class="hero-btns fade-up delay-3">
+        <button class="btn-primary" onclick="showPage('products')">Discover HoverLens</button>
+        <button class="btn-ghost" onclick="showPage('tech')">How it works</button>
 
-      <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Movies</a></li>
-        <li><a href="#">Experience</a></li>
-        <li><a href="#">Tickets</a></li>
-      </ul>
-    </nav>
-
-    <div class="hero-content">
-      <h2>Because Every Line Matters</h2>
-      <p>
-        A futuristic cinema experience with immersive visuals,
-        electric atmosphere, and cinematic elegance.
-      </p>
-
-      <a href="#" class="btn">Explore Now</a>
+      <div class="pill"><span class="pill-icon">👁️</span> Natural immersion</div>
+      <div class="pill"><span class="pill-icon">🌍</span> Real-time translation</div>
+      <div class="pill"><span class="pill-icon">🔒</span> Secure & private</div>
+      <div class="pill"><span class="pill-icon">🪶</span> Ultra-light & discreet</div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section class="features">
-
-    <div class="card">
-      <h3>Immersive Visuals</h3>
-      <p>
-        Neon cinematic atmosphere with powerful storytelling.
-      </p>
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div>
+      <div class="stat-num">102M</div>
+      <div class="stat-label">tourists in France per year</div>
     </div>
-
-    <div class="card">
-      <h3>Premium Experience</h3>
-      <p>
-        Elegant dark-themed interface inspired by luxury theaters.
-      </p>
+    <div>
+      <div class="stat-num">1 in 4</div>
+      <div class="stat-label">French adults with hearing impairment</div>
     </div>
-
-    <div class="card">
-      <h3>Modern Technology</h3>
-      <p>
-        Inspired by futuristic displays and digital cinema vibes.
-      </p>
+    <div>
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Languages supported</div>
     </div>
+    <div>
+      <div class="stat-num">5 yr</div>
+      <div class="stat-label">Device lifecycle guarantee</div>
+    </div>
+  </div>
 
+  <!-- COMPARISON -->
+  <section class="comparison-section">
+    <div class="section-eyebrow">The difference is visible</div>
+    <h2 class="section-title">Traditional subtitles<br>vs <span class="accent">Floating AR subtitles</span></h2>
+    <p class="section-lead">Traditional subtitles force your eyes to leave the screen constantly — causing fatigue and breaking immersion. HoverLens keeps everything in your natural field of vision.</p>
+    <img src="comparison.png" alt="HoverLens comparison" class="comparison-img">
   </section>
 
+  <!-- HOW IT WORKS -->
+  <section style="background: var(--black); padding: 100px 80px;">
+    <div class="section-eyebrow">The system</div>
+    <h2 class="section-title">Four steps. <span class="accent">Zero friction.</span></h2>
+    <p class="section-lead">HoverLens connects a cinema's existing audio feed to your glasses in real time through our proprietary BLE ecosystem.</p>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-num">01</div>
+        <div class="flow-step-icon">🎬</div>
+        <h3>Cinema Audio & Film</h3>
+        <p>The cinema's existing audio output feeds directly into the HoverStation — no changes to the projection system needed.</p>
+        <div class="flow-arrow">→</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">02</div>
+        <div class="flow-step-icon">🖥️</div>
+        <h3>HoverStation</h3>
+        <p>Our AI station processes the audio, generates real-time transcriptions, and translates into your chosen language — all locally.</p>
+        <div class="flow-arrow">→</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">03</div>
+        <div class="flow-step-icon">📡</div>
+        <h3>Bluetooth Transmission</h3>
+        <p>Encrypted BLE transmission sends your personalised subtitles securely to your HoverLens device. No Wi-Fi, no internet required.</p>
+        <div class="flow-arrow">→</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">04</div>
+        <div class="flow-step-icon">🕶️</div>
+        <h3>You Enjoy</h3>
+        <p>Subtitles float in your natural field of vision, dynamically tracking your head position — the screen is yours.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Hover<span>Lens</span></div>
+        <p class="footer-desc">The first universal AR subtitle device for cinema-goers. Designed in France for the world.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a onclick="showPage('tech')">Technology</a>
+        <a onclick="showPage('products')">Products</a>
+        <a onclick="showPage('products')">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a onclick="showPage('about')">Our Story</a>
+        <a onclick="showPage('about')">Team</a>
+        <a onclick="showPage('about')">Values</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a onclick="showPage('feedback')">Send Feedback</a>
+        <a>hello@hoverlens.fr</a>
+        <a>Paris, France 🇫🇷</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <div class="footer-legal">
+        <span>Privacy Policy</span>
+        <span>Terms of Service</span>
+        <span>Legal Notice</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ TECH -->
+<div id="page-tech" class="page">
+
+  <section style="background: var(--deep); padding: 140px 80px 80px;">
+    <div class="section-eyebrow fade-up">Technology</div>
+    <h1 class="section-title fade-up delay-1">Engineering <span class="accent">invisible</span><br>subtitles</h1>
+    <p class="section-lead fade-up delay-2">HoverLens is built on three breakthrough technologies: adaptive AR optics, on-device AI translation, and a secure local BLE ecosystem. No cloud. No compromise.</p>
+  </section>
+
+  <section style="padding: 80px;">
+    <div class="section-eyebrow">Core features</div>
+    <h2 class="section-title">What makes it <span class="accent">different</span></h2>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-card-icon">👁️</div>
+        <h3>Gaze-Adaptive Floating Subtitles</h3>
+        <p>Using an infrared screen-detector and a 3-axis gyroscope + accelerometer, HoverLens tracks your head position in real time. Subtitles stay perfectly anchored in your lower field of vision — wherever you look, they follow — so your eyes never need to travel to the bottom of the screen.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-icon">🤖</div>
+        <h3>Real-time AI Translation</h3>
+        <p>The HoverStation runs a local AI model that listens to the film's audio track and generates subtitles in your chosen language with minimal latency. No pre-existing scripts needed. Supports 20+ languages, including complex cultural expressions and dialogue nuance.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-icon">🔒</div>
+        <h3>Privacy-First Architecture</h3>
+        <p>Everything is processed on-premise inside the cinema. No voice data leaves the theatre. No recording, no streaming to external servers. The device does not contain a microphone — audio is captured only at the HoverStation level, fully under the cinema's control.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-icon">🛡️</div>
+        <h3>Anti-theft BLE Heartbeat</h3>
+        <p>HoverLens devices send a secure Bluetooth signal to the HoverStation. If a device exits the cinema perimeter, it automatically escalates its signal strength — triggering an alert on the cinema staff's monitor. Theft is detected before the thief reaches the exit.</p>
+      </div>
+      <div class="tech-card tech-card-wide">
+        <div>
+          <div class="tech-card-icon">🪶</div>
+          <h3>Universal Clip-On Form Factor</h3>
+          <p>Unlike full smart-glasses competitors, HoverLens is a compact module that clips onto any existing glasses frame — or is worn as a standalone lightweight visor. No special eyewear required. Guests who already wear glasses pay no comfort penalty.</p>
+          <p style="margin-top:12px;">Designed for 3-hour movies. Lightweight enough to forget you're wearing it.</p>
+        </div>
+        <div style="background: var(--card); border-radius: 12px; padding: 28px;">
+          <h4 style="font-family: var(--font-head); font-weight: 700; margin-bottom: 16px; font-size: 0.95rem;">vs. Competitors</h4>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding: 8px 0; border-bottom: 1px solid var(--border);">
+              <span style="color: var(--grey);">Sony Entertainment Glasses</span>
+              <span style="color: var(--red);">Heavy full frame ✗</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding: 8px 0; border-bottom: 1px solid var(--border);">
+              <span style="color: var(--grey);">Captify myVu</span>
+              <span style="color: #fbbf24;">430€ · 13 languages △</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding: 8px 0; border-bottom: 1px solid var(--border);">
+              <span style="color: var(--grey);">Greta & Starks</span>
+              <span style="color: var(--red);">Smartphone-only ✗</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding: 8px 0;">
+              <span style="color: var(--white); font-weight: 600;">HoverLens</span>
+              <span style="color: #4ade80; font-weight: 600;">Clip-on · 20+ lang · AR ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPEC TABLE -->
+  <section style="background: var(--deep); padding: 80px;">
+    <div class="section-eyebrow">Specifications</div>
+    <h2 class="section-title">Technical <span class="accent">specs</span></h2>
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Specification</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Display Technology</td>
+          <td>Micro-OLED waveguide projection</td>
+          <td><span class="spec-badge">AR · Eye-safe</span></td>
+        </tr>
+        <tr>
+          <td>Position Tracking</td>
+          <td>Infrared + 3-axis gyroscope + accelerometer</td>
+          <td><span class="spec-badge">Sub-15ms latency</span></td>
+        </tr>
+        <tr>
+          <td>Wireless Protocol</td>
+          <td>BLE 5.3 — encrypted channel</td>
+          <td><span class="spec-badge">No Wi-Fi required</span></td>
+        </tr>
+        <tr>
+          <td>AI Translation Model</td>
+          <td>On-premise NPU/GPU in HoverStation</td>
+          <td><span class="spec-badge">20+ languages</span></td>
+        </tr>
+        <tr>
+          <td>Form factor</td>
+          <td>Universal clip-on module</td>
+          <td><span class="spec-badge">≤ 22g device weight</span></td>
+        </tr>
+        <tr>
+          <td>Battery</td>
+          <td>Internal rechargeable — 4+ hour sessions</td>
+          <td><span class="spec-badge">USB-C dock charging</span></td>
+        </tr>
+        <tr>
+          <td>MCU</td>
+          <td>STMicroelectronics (France)</td>
+          <td><span class="spec-badge">EU-made</span></td>
+        </tr>
+        <tr>
+          <td>Lifecycle</td>
+          <td>5+ years · field-replaceable parts</td>
+          <td><span class="spec-badge">REEN compliant</span></td>
+        </tr>
+        <tr>
+          <td>Privacy</td>
+          <td>No onboard microphone · local processing only</td>
+          <td><span class="spec-badge">GDPR · EU AI Act</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ENVIRONMENTAL -->
+  <section style="padding: 80px;">
+    <div class="section-eyebrow">Sustainability</div>
+    <h2 class="section-title">Designed to <span class="accent">last</span></h2>
+    <div class="tech-grid" style="margin-top: 40px;">
+      <div class="tech-card">
+        <div class="tech-card-icon">♻️</div>
+        <h3>Share Model → Lower Carbon</h3>
+        <p>One device serves many moviegoers. The shared model dramatically reduces the per-use carbon footprint compared to individually owned devices. AI translations are cached after first use — no redundant compute per language.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-card-icon">🌿</div>
+        <h3>REEN & AGEC Compliant</h3>
+        <p>Every HoverLens device is tested against France's REEN durability index. Packaging is deforestation-free. End-of-life instructions, recycled plastic content, and carbon footprint are displayed on the product following ESPR regulations.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <div class="footer-legal">
+        <span>Privacy Policy</span>
+        <span>Legal Notice</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ PRODUCTS -->
+<div id="page-products" class="page">
+
+  <div class="products-hero">
+    <div class="section-eyebrow fade-up" style="display:inline-block;">Products & Services</div>
+    <h1 class="section-title fade-up delay-1" style="text-align:center; margin: 16px auto 0;">Everything your cinema needs.<br><span class="accent">Nothing it doesn't.</span></h1>
+    <p class="section-lead fade-up delay-2" style="text-align:center; margin: 20px auto 0;">HoverLens is a B2B solution. We partner with cinemas to deploy our ecosystem — devices, station, and support — under one subscription. No upfront hardware complexity.</p>
+  </div>
+
+  <div class="product-cards">
+    <div class="product-card fade-up">
+      <div class="product-card-tag">Hardware</div>
+      <h2>HoverLens Device</h2>
+      <p>The ultra-light clip-on AR module that attaches to any glasses frame. Displays dynamically positioned, eye-friendly floating subtitles throughout the entire film.</p>
+      <div class="product-card-features">
+        <div class="product-feature">Universal clip-on mount — fits any frame</div>
+        <div class="product-feature">Infrared + gyroscope gaze tracking</div>
+        <div class="product-feature">4+ hour battery per session</div>
+        <div class="product-feature">Anti-theft BLE heartbeat</div>
+        <div class="product-feature">Sanitization-ready hard shell</div>
+        <div class="product-feature">5-year guaranteed lifecycle</div>
+      </div>
+    </div>
+    <div class="product-card fade-up delay-1">
+      <div class="product-card-tag">Station</div>
+      <h2>HoverStation</h2>
+      <p>The cinema-side processing unit. Connects to existing audio output, runs on-premise AI translation, and distributes personalised subtitles to all active HoverLens devices in the hall simultaneously.</p>
+      <div class="product-card-features">
+        <div class="product-feature">Serves unlimited concurrent devices</div>
+        <div class="product-feature">20+ language real-time translation</div>
+        <div class="product-feature">100% local processing — no cloud</div>
+        <div class="product-feature">Works without internet connection</div>
+        <div class="product-feature">Fleet management dashboard</div>
+        <div class="product-feature">Automatic firmware updates</div>
+      </div>
+    </div>
+    <div class="product-card fade-up delay-2" style="grid-column: span 2;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;">
+        <div>
+          <div class="product-card-tag">Software</div>
+          <h2 style="margin-top: 12px;">Cinema Dashboard</h2>
+          <p>A web-based management platform for cinema operators. Configure languages per hall, track device inventory, monitor battery levels, receive theft alerts, and download usage analytics.</p>
+        </div>
+        <div class="product-card-features" style="margin-top: 36px;">
+          <div class="product-feature">Real-time device fleet monitoring</div>
+          <div class="product-feature">Per-hall language configuration</div>
+          <div class="product-feature">Theft alert notifications</div>
+          <div class="product-feature">Usage and accessibility reporting</div>
+          <div class="product-feature">Remote firmware management</div>
+          <div class="product-feature">Multi-site support for chains</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <section class="pricing-section">
+    <div class="section-eyebrow">Pricing</div>
+    <h2 class="section-title">Transparent. <span class="accent">Scalable.</span></h2>
+    <p class="section-lead">We work directly with cinema operators and theatre chains. All plans include HoverStation, devices, installation, and ongoing support.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Essentials</h3>
+        <p style="font-size:0.82rem; color: var(--grey); margin-top: 6px;">Perfect for independent cinemas</p>
+        <div class="price">Custom</div>
+        <div class="price-note">Based on hall capacity · annual licence</div>
+        <div class="product-card-features">
+          <div class="product-feature">Up to 2 halls</div>
+          <div class="product-feature">1 HoverStation per hall</div>
+          <div class="product-feature">Up to 50 devices</div>
+          <div class="product-feature">5 languages</div>
+          <div class="product-feature">Email support</div>
+        </div>
+      </div>
+      <div class="pricing-card featured">
+        <h3>Pro</h3>
+        <p style="font-size:0.82rem; color: var(--grey); margin-top: 6px;">For multi-hall cinemas</p>
+        <div class="price">Custom</div>
+        <div class="price-note">Based on hall capacity · annual licence</div>
+        <div class="product-card-features">
+          <div class="product-feature">Up to 10 halls</div>
+          <div class="product-feature">1 HoverStation per hall</div>
+          <div class="product-feature">Unlimited devices</div>
+          <div class="product-feature">20+ languages</div>
+          <div class="product-feature">Priority phone support</div>
+          <div class="product-feature">Dashboard analytics</div>
+        </div>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <p style="font-size:0.82rem; color: var(--grey); margin-top: 6px;">Cinema chains & festivals</p>
+        <div class="price">Contact</div>
+        <div class="price-note">Multi-site · bespoke agreement</div>
+        <div class="product-card-features">
+          <div class="product-feature">Unlimited sites & halls</div>
+          <div class="product-feature">Centralised fleet management</div>
+          <div class="product-feature">Custom language models</div>
+          <div class="product-feature">SLA guarantee</div>
+          <div class="product-feature">Dedicated account manager</div>
+          <div class="product-feature">Co-branding option</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 48px;">
+      <p style="color: var(--grey); font-size: 0.88rem; margin-bottom: 20px;">All pricing is provided on request following a needs assessment. CNC and France 2030 funding may reduce your net cost.</p>
+      <button class="btn-primary" onclick="showPage('feedback')">Request a Quote</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <div class="footer-legal">
+        <span>Privacy Policy</span>
+        <span>Legal Notice</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ FEEDBACK -->
+<div id="page-feedback" class="page">
+  <div class="feedback-wrap">
+    <div class="section-eyebrow fade-up">Feedback & Contact</div>
+    <h1 class="section-title fade-up delay-1">We'd love to<br><span class="accent">hear from you</span></h1>
+    <p class="section-lead fade-up delay-2" style="max-width: 100%; margin-top: 14px;">Whether you're a cinema operator, a potential partner, or simply someone passionate about accessible cinema — reach out.</p>
+
+    <div id="feedback-form" class="feedback-form fade-up delay-3">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" id="fname" placeholder="Jean">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" id="lname" placeholder="Dupont">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="email" placeholder="jean@gaumont.fr">
+      </div>
+      <div class="form-group">
+        <label class="form-label">I am a…</label>
+        <select class="form-select" id="role">
+          <option value="">Select a role</option>
+          <option>Cinema Operator (CFO / Management)</option>
+          <option>Marketing or Innovation Team</option>
+          <option>Cinema Visitor / End User</option>
+          <option>Investor or Partner</option>
+          <option>Press / Journalist</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <select class="form-select" id="subject">
+          <option value="">Select a subject</option>
+          <option>Product demonstration request</option>
+          <option>Partnership / deployment enquiry</option>
+          <option>Pricing & quote request</option>
+          <option>Technical question</option>
+          <option>General feedback</option>
+          <option>Press enquiry</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your experience with subtitles at the cinema</label>
+        <div class="stars" id="stars">
+          <span class="star" data-v="1">★</span>
+          <span class="star" data-v="2">★</span>
+          <span class="star" data-v="3">★</span>
+          <span class="star" data-v="4">★</span>
+          <span class="star" data-v="5">★</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" id="message" placeholder="Tell us about your cinema, your challenges, or your thoughts on HoverLens…"></textarea>
+      </div>
+      <button class="form-submit" onclick="submitFeedback()">Send Message</button>
+    </div>
+
+    <div class="success-msg" id="success-msg">
+      <div class="success-icon">✅</div>
+      <h2 class="section-title" style="text-align:center;">Message received!</h2>
+      <p style="color: var(--grey); margin-top: 16px; font-size: 1rem;">Thank you for reaching out. Our team will get back to you within 48 hours.</p>
+      <button class="btn-ghost" style="margin: 32px auto 0; display: block;" onclick="resetFeedback()">Send another message</button>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <div class="footer-legal">
+        <span>Privacy Policy</span>
+        <span>Legal Notice</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ ABOUT -->
+<div id="page-about" class="page">
+
+  <div class="about-hero">
+    <div class="section-eyebrow fade-up" style="display:inline-block;">About HoverLens</div>
+    <h1 class="section-title fade-up delay-1" style="text-align: center; margin: 16px auto 0; max-width: 700px;">Cinema belongs<br>to <span class="accent">everyone.</span></h1>
+    <p class="section-lead fade-up delay-2" style="text-align: center; margin: 20px auto 0; max-width: 520px;">HoverLens was born from a simple belief: language and hearing loss should never stand between a person and the magic of cinema.</p>
+  </div>
+
+  <!-- STORY -->
+  <section class="story-section">
+    <div class="section-eyebrow">Our story</div>
+    <div class="story-layout">
+      <div class="story-text">
+        <h2 class="section-title" style="margin-bottom: 28px;">From frustration<br>to <span class="accent">invention</span></h2>
+        <p>France welcomes over 102 million tourists every year — the highest of any country in the world. Yet most of them can't follow a film in a local cinema. Meanwhile, 1 in 4 French adults live with some degree of hearing impairment. Traditional subtitle solutions force the eyes down, breaking the immersion that makes cinema so powerful.</p>
+        <p>HoverLens started as a student project — a question: what if subtitles moved with you instead of sitting fixed at the bottom of a screen? Two years of prototyping, sensor testing, and AI integration later, we have an answer.</p>
+        <p>We are proud to be building a French tech company at the intersection of culture, accessibility, and innovation — supported by France 2030 and aligned with l'exception culturelle.</p>
+      </div>
+      <div class="story-visual">
+        <h3 style="font-family: var(--font-head); font-weight: 700; font-size: 1rem; margin-bottom: 8px; color: var(--grey);">Our journey</h3>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <div class="timeline-year">2025</div>
+            <div class="timeline-event">Idea born from personal experience of subtitle fatigue in a Nice cinema</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <div class="timeline-year">2026</div>
+            <div class="timeline-event">First prototype of HoverLens clip-on with basic AR optics and BLE</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <div class="timeline-year">Mid 2026</div>
+            <div class="timeline-event">HoverStation AI translation engine reaches sub-15ms latency</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <div class="timeline-year">Late 2026</div>
+            <div class="timeline-event">Value proposition validated with cinema operators in Paris & Lyon</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <div class="timeline-year">2027</div>
+            <div class="timeline-event">Website launch · seeking first cinema partners · applying for CNC funding</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="team-section">
+    <div class="section-eyebrow">The team</div>
+    <h2 class="section-title">Meet the people<br>behind <span class="accent">HoverLens</span></h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">⚙️</div>
+        <h3>Hardware Engineering</h3>
+        <div class="role">Founding Team</div>
+        <p>Responsible for the HoverLens clip-on module design — optics, sensors, form factor, and lifecycle engineering. Sourcing from STMicroelectronics (France).</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🤖</div>
+        <h3>AI & Software</h3>
+        <div class="role">Founding Team</div>
+        <p>Built the on-premise AI translation pipeline running inside HoverStation. Tuned for cinematic language, cultural expression, and sub-15ms latency.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🎯</div>
+        <h3>Product & Strategy</h3>
+        <div class="role">Founding Team</div>
+        <p>Defined the B2B go-to-market strategy, cinema partnerships, and value proposition. Connecting innovation with the realities of the French cinema market.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🎨</div>
+        <h3>Design & UX</h3>
+        <div class="role">Founding Team</div>
+        <p>Owns the HoverLens visual identity, user experience, and cinema-facing dashboard. Ensuring the technology feels invisible to the end user.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">⚖️</div>
+        <h3>Legal & Compliance</h3>
+        <div class="role">Founding Team</div>
+        <p>Navigating EU AI Act, GDPR, SACD/ATAA IP considerations, and ESPR environmental requirements. Keeping HoverLens on the right side of French and EU law.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">📊</div>
+        <h3>Finance & Operations</h3>
+        <div class="role">Founding Team</div>
+        <p>Managing R&D credit claims (CIR — up to 30% refund), France 2030 grant applications, and the financial model for our cinema partnership rollout.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="values-section">
+    <div class="section-eyebrow">What we stand for</div>
+    <h2 class="section-title">Our <span class="accent">values</span></h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">🌍</div>
+        <h4>Inclusion First</h4>
+        <p>Cinema is a universal language. Our technology ensures no one is left out — whether by hearing loss, foreign language, or disability.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔒</div>
+        <h4>Privacy by Design</h4>
+        <p>We process everything locally. No data leaves the cinema. No profiles, no cloud, no surveillance. Your voice is never recorded.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🌱</div>
+        <h4>Sustainable Technology</h4>
+        <p>Shared devices, long lifecycles, REEN-compliant durability, recycled packaging. We build tech that respects the planet.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🇫🇷</div>
+        <h4>Proud to be French</h4>
+        <p>Rooted in l'exception culturelle. We support French cinema and the creative ecosystem — from Cannes to local independent theatres.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 80px; background: var(--black); text-align: center;">
+    <h2 class="section-title">Ready to bring HoverLens<br>to your <span class="accent">cinema?</span></h2>
+    <p class="section-lead" style="text-align:center; margin: 16px auto 32px; max-width: 480px;">We're actively looking for cinema partners in France and Europe. Let's build something together.</p>
+    <button class="btn-primary" onclick="showPage('feedback')">Get in touch</button>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Hover<span>Lens</span></div>
+        <p class="footer-desc">The first universal AR subtitle device for cinema-goers. Designed in France for the world.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a onclick="showPage('tech')">Technology</a>
+        <a onclick="showPage('products')">Products</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a onclick="showPage('about')">Our Story</a>
+        <a onclick="showPage('about')">Team</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a onclick="showPage('feedback')">Send Feedback</a>
+        <a>hello@hoverlens.fr</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <div class="footer-legal">
+        <span>Privacy Policy</span>
+        <span>Terms of Service</span>
+        <span>Legal Notice</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ── PAGE ROUTING ────────────────────────────────────────────
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const map = { home: 0, tech: 1, products: 2, about: 3, feedback: 4 };
+    const links = document.querySelectorAll('.nav-link');
+    if (map[id] !== undefined) links[map[id]].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Re-trigger fade-up animations
+    document.querySelectorAll('#page-' + id + ' .fade-up').forEach((el, i) => {
+      el.style.animation = 'none';
+      setTimeout(() => {
+        el.style.animation = '';
+      }, 10);
+    });
+  }
+
+  // ── STAR RATING ─────────────────────────────────────────────
+  let rating = 0;
+  document.querySelectorAll('.star').forEach(star => {
+    star.addEventListener('mouseover', function() {
+      const v = parseInt(this.dataset.v);
+      document.querySelectorAll('.star').forEach(s => {
+        s.classList.toggle('active', parseInt(s.dataset.v) <= v);
+      });
+    });
+    star.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.star').forEach(s => {
+        s.classList.toggle('active', parseInt(s.dataset.v) <= rating);
+      });
+    });
+    star.addEventListener('click', function() {
+      rating = parseInt(this.dataset.v);
+      document.querySelectorAll('.star').forEach(s => {
+        s.classList.toggle('active', parseInt(s.dataset.v) <= rating);
+      });
+    });
+  });
+
+  // ── FEEDBACK SUBMIT ──────────────────────────────────────────
+  function submitFeedback() {
+    const fname = document.getElementById('fname').value;
+    const email = document.getElementById('email').value;
+    if (!fname || !email) {
+      alert('Please fill in at least your name and email.');
+      return;
+    }
+    document.getElementById('feedback-form').style.display = 'none';
+    document.getElementById('success-msg').classList.add('show');
+  }
+
+  function resetFeedback() {
+    document.getElementById('feedback-form').style.display = 'flex';
+    document.getElementById('success-msg').classList.remove('show');
+    ['fname','lname','email','message'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('role').value = '';
+    document.getElementById('subject').value = '';
+    rating = 0;
+    document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+  }
+</script>
 </body>
 </html>
