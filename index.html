@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HoverLens — See the movie. Not the subtitles.</title>
+<title>HoverScreen — See the movie. Not the subtitles.</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -77,7 +77,7 @@
 
   .nav-cta {
     font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
-    color: var(--white); padding: 9px 22px; border-radius: 8px;
+    color: #ffffff; padding: 9px 22px !important; border-radius: 8px;
     cursor: pointer; letter-spacing: 0.03em; text-transform: uppercase;
     border: 1px solid var(--purple); background: var(--purple);
     transition: all 0.2s;
@@ -192,9 +192,9 @@
   }
 
   .section-title {
-    font-family: var(--font-head); font-weight: 800;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    line-height: 1.1; letter-spacing: -0.02em;
+    font-family: var(--font-head); font-weight: 700;
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    line-height: 1.15; letter-spacing: -0.02em;
   }
   .section-title .accent { color: var(--purple-light); }
   .section-title .red { color: var(--red); }
@@ -523,10 +523,10 @@
     box-shadow: 0 8px 30px rgba(17,24,39,0.06);
   }
 
-  .nav-logo { color: #111827; }
+  .nav-logo { color: #0b1221; }
   .nav-logo span { color: var(--purple); }
 
-  .nav-link { color: #5f6472; }
+  .nav-link { color: #07080b; }
   .nav-link:hover {
     color: #111827;
     background: rgba(124,58,237,0.08);
@@ -616,7 +616,7 @@
   .footer-col h4,
   .form-label,
   .pricing-card .price-note {
-    color: #5f6472;
+    color: #000000;
   }
 
   .comparison-section,
@@ -718,6 +718,50 @@
     background: linear-gradient(145deg, rgba(124,58,237,0.08), #ffffff) !important;
   }
 
+  .carousel {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 60px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.carousel img {
+  width: 100%;
+  display: block;
+  border-radius: 20px;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: 0.25s;
+  z-index: 10;
+}
+
+.carousel-btn:hover {
+  background: rgba(124,58,237,0.9);
+}
+
+.prev {
+  left: 20px;
+}
+
+.next {
+  right: 20px;
+}
+
   .form-input,
   .form-textarea,
   .form-select {
@@ -781,6 +825,12 @@
     box-shadow: 0 0 14px rgba(124,58,237,0.4);
   }
 
+  .logo-img{
+    height: 40px;
+    width: auto;
+    vertical-align: middle;
+  }
+
   @media (max-width: 900px) {
     nav {
       background: rgba(255,255,255,0.96);
@@ -793,7 +843,9 @@
 
 <!-- ═══════════════════════════════════════════════════════════ NAV -->
 <nav>
-  <div class="nav-logo" onclick="showPage('home')">Hover<span>Lens</span></div>
+  <div class="nav-logo" onclick="showPage('home')">
+    <img src="logotype0.jpg" alt="Hover Screen Logo" class="logo-img">
+  </div>
   <div class="nav-links">
     <button class="nav-link active" onclick="showPage('home')">Home</button>
     <button class="nav-link" onclick="showPage('tech')">Technology</button>
@@ -809,18 +861,16 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-bg">
-      <img src="hero.png" alt="HoverLens hero">
+      <img src="hero.png" alt="HoverScreen hero">
     </div>
 <br>
       <div class="hero-eyebrow fade-up">AR Subtitle Technology · Made in France</div>
       <div class="hero-btns fade-up delay-3">
-        <button class="btn-primary" onclick="showPage('products')">Discover HoverLens</button>
-        <button class="btn-ghost" onclick="showPage('tech')">How it works</button>
-
-      <div class="pill"><span class="pill-icon">👁️</span> Natural immersion</div>
+        <button class="btn-primary" onclick="showPage('products')">Discover HoverScreen</button>
+      <!--<div class="pill"><span class="pill-icon">👁️</span> Natural immersion</div>
       <div class="pill"><span class="pill-icon">🌍</span> Real-time translation</div>
       <div class="pill"><span class="pill-icon">🔒</span> Secure & private</div>
-      <div class="pill"><span class="pill-icon">🪶</span> Ultra-light & discreet</div>
+      <div class="pill"><span class="pill-icon">🪶</span> Ultra-light & discreet</div>-->
     </div>
   </section>
 
@@ -844,22 +894,35 @@
     </div>
   </div>
 
+  <div class="carousel">
+  <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
+
+  <img id="carousel-image" src="boxOffice.png" alt="HoverScreen image">
+
+  <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
+</div>
+
   <!-- COMPARISON -->
   <section class="comparison-section">
     <div class="section-eyebrow">The difference is visible</div>
     <h2 class="section-title">Traditional subtitles<br>vs <span class="accent">Floating AR subtitles</span></h2>
-    <p class="section-lead">Traditional subtitles force your eyes to leave the screen constantly — causing fatigue and breaking immersion. HoverLens keeps everything in your natural field of vision.</p>
-    <img src="comparison.png" alt="HoverLens comparison" class="comparison-img">
+    <p class="section-lead">Traditional subtitles force your eyes to leave the screen constantly — causing fatigue and breaking immersion. HoverScreen keeps everything in your natural field of vision.</p>
+    <img src="comparison.png" alt="HoverScreen comparison" class="comparison-img">
+    <button class="btn-ghost" onclick="showPage('tech')">How it works</button>
   </section>
 
   <div class="divider"></div>
+
+  
 
   <!-- FOOTER -->
   <footer>
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">Hover<span>Lens</span></div>
-        <p class="footer-desc">The first universal AR subtitle device for cinema-goers. Designed in France for the world.</p>
+        <div class="footer-brand">
+          <img src="logotype0.jpg" alt="Hover Screen logo" class="logo-img">
+        </div>
+        <p class="footer-desc">The first universal AR subtitle device for cinema-goers.</p>
       </div>
       <div class="footer-col">
         <h4>Product</h4>
@@ -876,12 +939,12 @@
       <div class="footer-col">
         <h4>Contact</h4>
         <a onclick="showPage('feedback')">Send Feedback</a>
-        <a>hello@hoverlens.fr</a>
-        <a>Paris, France 🇫🇷</a>
+        <a>team@hoverscreen.fr</a>
+        <a>Sophia Antipolis, France 🇫🇷</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <span class="footer-copy">© 2026 HoverScreen. All rights reserved.</span>
       <div class="footer-legal">
         <span>Privacy Policy</span>
         <span>Terms of Service</span>
@@ -897,7 +960,7 @@
   <section style="background: var(--deep); padding: 140px 80px 80px;">
     <div class="section-eyebrow fade-up">Technology</div>
     <h1 class="section-title fade-up delay-1">Engineering <span class="accent">invisible</span><br>subtitles</h1>
-    <p class="section-lead fade-up delay-2">HoverLens is built on three breakthrough technologies: adaptive AR optics, on-device AI translation, and a secure local BLE ecosystem. No cloud. No compromise.</p>
+    <p class="section-lead fade-up delay-2">HoverScreen is built on three breakthrough technologies: adaptive AR optics, on-device AI translation, and a secure local BLE ecosystem. No cloud. No compromise.</p>
   </section>
 
   <section style="padding: 80px;">
@@ -907,7 +970,7 @@
       <div class="tech-card">
         <div class="tech-card-icon">👁️</div>
         <h3>Gaze-Adaptive Floating Subtitles</h3>
-        <p>Using an infrared screen-detector and a 3-axis gyroscope + accelerometer, HoverLens tracks your head position in real time. Subtitles stay perfectly anchored in your lower field of vision — wherever you look, they follow — so your eyes never need to travel to the bottom of the screen.</p>
+        <p>Using an infrared screen-detector and a 3-axis gyroscope + accelerometer, HoverScreen tracks your head position in real time. Subtitles stay perfectly anchored in your lower field of vision — wherever you look, they follow — so your eyes never need to travel to the bottom of the screen.</p>
       </div>
       <div class="tech-card">
         <div class="tech-card-icon">🤖</div>
@@ -922,14 +985,14 @@
       <div class="tech-card">
         <div class="tech-card-icon">🛡️</div>
         <h3>Anti-theft BLE Heartbeat</h3>
-        <p>HoverLens devices send a secure Bluetooth signal to the HoverStation. If a device exits the cinema perimeter, it automatically escalates its signal strength — triggering an alert on the cinema staff's monitor. Theft is detected before the thief reaches the exit.</p>
+        <p>HoverScreen devices send a secure Bluetooth signal to the HoverStation. If a device exits the cinema perimeter, it automatically escalates its signal strength — triggering an alert on the cinema staff's monitor. Theft is detected before the thief reaches the exit.</p>
       </div>
       <!--
       <div class="tech-card tech-card-wide">
         <div>
           <div class="tech-card-icon">🪶</div>
           <h3>Universal Clip-On Form Factor</h3>
-          <p>Unlike full smart-glasses competitors, HoverLens is a compact module that clips onto any existing glasses frame — or is worn as a standalone lightweight visor. No special eyewear required. Guests who already wear glasses pay no comfort penalty.</p>
+          <p>Unlike full smart-glasses competitors, HoverScreen is a compact module that clips onto any existing glasses frame — or is worn as a standalone lightweight visor. No special eyewear required. Guests who already wear glasses pay no comfort penalty.</p>
           <p style="margin-top:12px;">Designed for 3-hour movies. Lightweight enough to forget you're wearing it.</p>
         </div>
         <div style="background: var(--card); border-radius: 12px; padding: 28px;">
@@ -948,7 +1011,7 @@
               <span style="color: var(--red);">Smartphone-only ✗</span>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding: 8px 0;">
-              <span style="color: var(--white); font-weight: 600;">HoverLens</span>
+              <span style="color: var(--white); font-weight: 600;">HoverScreen</span>
               <span style="color: #4ade80; font-weight: 600;">Clip-on · 20+ lang · AR ✓</span>
             </div>
           </div>
@@ -960,7 +1023,7 @@
   <section style="background: var(--black); padding: 100px 80px;">
     <div class="section-eyebrow">The system</div>
     <h2 class="section-title">Four steps. <span class="accent">Zero friction.</span></h2>
-    <p class="section-lead">HoverLens connects a cinema's existing audio feed to your glasses in real time through our proprietary BLE ecosystem.</p>
+    <p class="section-lead">HoverScreen connects a cinema's existing audio feed to your glasses in real time through our proprietary BLE ecosystem.</p>
     <div class="flow-steps">
       <div class="flow-step">
         <div class="flow-step-num">01</div>
@@ -980,7 +1043,7 @@
         <div class="flow-step-num">03</div>
         <div class="flow-step-icon">📡</div>
         <h3>Bluetooth Transmission</h3>
-        <p>Encrypted BLE transmission sends your personalised subtitles securely to your HoverLens device. No Wi-Fi, no internet required.</p>
+        <p>Encrypted BLE transmission sends your personalised subtitles securely to your HoverScreen device. No Wi-Fi, no internet required.</p>
         <div class="flow-arrow">→</div>
       </div>
       <div class="flow-step">
@@ -1066,14 +1129,14 @@
       <div class="tech-card">
         <div class="tech-card-icon">🌿</div>
         <h3>REEN & AGEC Compliant</h3>
-        <p>Every HoverLens device is tested against France's REEN durability index. Packaging is deforestation-free. End-of-life instructions, recycled plastic content, and carbon footprint are displayed on the product following ESPR regulations.</p>
+        <p>Every HoverScreen device is tested against France's REEN durability index. Packaging is deforestation-free. End-of-life instructions, recycled plastic content, and carbon footprint are displayed on the product following ESPR regulations.</p>
       </div>
     </div>
   </section>
 
   <footer>
     <div class="footer-bottom" style="border-top: none; padding-top: 0;">
-      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <span class="footer-copy">© 2026 HoverScreen. All rights reserved.</span>
       <div class="footer-legal">
         <span>Privacy Policy</span>
         <span>Legal Notice</span>
@@ -1088,13 +1151,13 @@
   <div class="products-hero">
     <div class="section-eyebrow fade-up" style="display:inline-block;">Products & Services</div>
     <h1 class="section-title fade-up delay-1" style="text-align:center; margin: 16px auto 0;">Everything your cinema needs.<br><span class="accent">Nothing it doesn't.</span></h1>
-    <p class="section-lead fade-up delay-2" style="text-align:center; margin: 20px auto 0;">HoverLens is a B2B solution. We partner with cinemas to deploy our ecosystem — devices, station, and support — under one subscription. No upfront hardware complexity.</p>
+    <p class="section-lead fade-up delay-2" style="text-align:center; margin: 20px auto 0;">HoverScreen is a B2B solution. We partner with cinemas to deploy our ecosystem — devices, station, and support — under one subscription. No upfront hardware complexity.</p>
   </div>
 
   <div class="product-cards">
     <div class="product-card fade-up">
       <div class="product-card-tag">Hardware</div>
-      <h2>HoverLens Device</h2>
+      <h2>HoverScreen Device</h2>
       <p>The ultra-light clip-on AR module that attaches to any glasses frame. Displays dynamically positioned, eye-friendly floating subtitles throughout the entire film.</p>
       <div class="product-card-features">
         <div class="product-feature">Universal clip-on mount — fits any frame</div>
@@ -1108,7 +1171,7 @@
     <div class="product-card fade-up delay-1">
       <div class="product-card-tag">Station</div>
       <h2>HoverStation</h2>
-      <p>The cinema-side processing unit. Connects to existing audio output, runs on-premise AI translation, and distributes personalised subtitles to all active HoverLens devices in the hall simultaneously.</p>
+      <p>The cinema-side processing unit. Connects to existing audio output, runs on-premise AI translation, and distributes personalised subtitles to all active HoverScreen devices in the hall simultaneously.</p>
       <div class="product-card-features">
         <div class="product-feature">Serves unlimited concurrent devices</div>
         <div class="product-feature">20+ language real-time translation</div>
@@ -1193,7 +1256,7 @@
 
   <footer>
     <div class="footer-bottom" style="border-top: none; padding-top: 0;">
-      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <span class="footer-copy">© 2026 HoverScreen. All rights reserved.</span>
       <div class="footer-legal">
         <span>Privacy Policy</span>
         <span>Legal Notice</span>
@@ -1260,7 +1323,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">Message</label>
-        <textarea class="form-textarea" id="message" placeholder="Tell us about your cinema, your challenges, or your thoughts on HoverLens…"></textarea>
+        <textarea class="form-textarea" id="message" placeholder="Tell us about your cinema, your challenges, or your thoughts on HoverScreen…"></textarea>
       </div>
       <button class="form-submit" onclick="submitFeedback()">Send Message</button>
     </div>
@@ -1276,7 +1339,7 @@
 
   <footer>
     <div class="footer-bottom" style="border-top: none; padding-top: 0;">
-      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <span class="footer-copy">© 2026 HoverScreen. All rights reserved.</span>
       <div class="footer-legal">
         <span>Privacy Policy</span>
         <span>Legal Notice</span>
@@ -1289,9 +1352,9 @@
 <div id="page-about" class="page">
 
   <div class="about-hero">
-    <div class="section-eyebrow fade-up" style="display:inline-block;">About HoverLens</div>
+    <div class="section-eyebrow fade-up" style="display:inline-block;">About HoverScreen</div>
     <h1 class="section-title fade-up delay-1" style="text-align: center; margin: 16px auto 0; max-width: 700px;">Cinema belongs<br>to <span class="accent">everyone.</span></h1>
-    <p class="section-lead fade-up delay-2" style="text-align: center; margin: 20px auto 0; max-width: 520px;">HoverLens was born from a simple belief: language and hearing loss should never stand between a person and the magic of cinema.</p>
+    <p class="section-lead fade-up delay-2" style="text-align: center; margin: 20px auto 0; max-width: 520px;">HoverScreen was born from a simple belief: language and hearing loss should never stand between a person and the magic of cinema.</p>
   </div>
 
   <!-- STORY -->
@@ -1301,7 +1364,7 @@
       <div class="story-text">
         <h2 class="section-title" style="margin-bottom: 28px;">From frustration<br>to <span class="accent">invention</span></h2>
         <p style="color: black;">France welcomes over 102 million tourists every year — the highest of any country in the world. Yet most of them can't follow a film in a local cinema. Meanwhile, 1 in 4 French adults live with some degree of hearing impairment. Traditional subtitle solutions force the eyes down, breaking the immersion that makes cinema so powerful.</p>
-        <p style="color: black;">HoverLens started as a student project — a question: what if subtitles moved with you instead of sitting fixed at the bottom of a screen? Two years of prototyping, sensor testing, and AI integration later, we have an answer.</p>
+        <p style="color: black;">HoverScreen started as a student project — a question: what if subtitles moved with you instead of sitting fixed at the bottom of a screen? Two years of prototyping, sensor testing, and AI integration later, we have an answer.</p>
         <p style="color: black;">We are proud to be building a French tech company at the intersection of culture, accessibility, and innovation — supported by France 2030 and aligned with l'exception culturelle.</p>
       </div>
       <div class="story-visual">
@@ -1317,7 +1380,7 @@
           <div class="timeline-dot"></div>
           <div>
             <div class="timeline-year">2026</div>
-            <div class="timeline-event">First prototype of HoverLens clip-on with basic AR optics and BLE</div>
+            <div class="timeline-event">First prototype of HoverScreen clip-on with basic AR optics and BLE</div>
           </div>
         </div>
         <div class="timeline-item">
@@ -1348,13 +1411,13 @@
   <!-- TEAM -->
   <section class="team-section">
     <div class="section-eyebrow">The team</div>
-    <h2 class="section-title">Meet the people<br>behind <span class="accent">HoverLens</span></h2>
+    <h2 class="section-title">Meet the people<br>behind <span class="accent">HoverScreen</span></h2>
     <div class="team-grid">
       <div class="team-card">
         <div class="team-avatar">⚙️</div>
         <h3>Hardware Engineering</h3>
         <div class="role">Founding Team</div>
-        <p>Responsible for the HoverLens clip-on module design — optics, sensors, form factor, and lifecycle engineering. Sourcing from STMicroelectronics (France).</p>
+        <p>Responsible for the HoverScreen clip-on module design — optics, sensors, form factor, and lifecycle engineering. Sourcing from STMicroelectronics (France).</p>
       </div>
       <div class="team-card">
         <div class="team-avatar">🤖</div>
@@ -1372,13 +1435,13 @@
         <div class="team-avatar">🎨</div>
         <h3>Design & UX</h3>
         <div class="role">Founding Team</div>
-        <p>Owns the HoverLens visual identity, user experience, and cinema-facing dashboard. Ensuring the technology feels invisible to the end user.</p>
+        <p>Owns the HoverScreen visual identity, user experience, and cinema-facing dashboard. Ensuring the technology feels invisible to the end user.</p>
       </div>
       <div class="team-card">
         <div class="team-avatar">⚖️</div>
         <h3>Legal & Compliance</h3>
         <div class="role">Founding Team</div>
-        <p>Navigating EU AI Act, GDPR, SACD/ATAA IP considerations, and ESPR environmental requirements. Keeping HoverLens on the right side of French and EU law.</p>
+        <p>Navigating EU AI Act, GDPR, SACD/ATAA IP considerations, and ESPR environmental requirements. Keeping HoverScreen on the right side of French and EU law.</p>
       </div>
       <div class="team-card">
         <div class="team-avatar">📊</div>
@@ -1418,7 +1481,7 @@
   </section>
 
   <section style="padding: 80px; background: var(--black); text-align: center;">
-    <h2 class="section-title">Ready to bring HoverLens<br>to your <span class="accent">cinema?</span></h2>
+    <h2 class="section-title">Ready to bring HoverScreen<br>to your <span class="accent">cinema?</span></h2>
     <p class="section-lead" style="text-align:center; margin: 16px auto 32px; max-width: 480px;">We're actively looking for cinema partners in France and Europe. Let's build something together.</p>
     <button class="btn-primary" onclick="showPage('feedback')">Get in touch</button>
   </section>
@@ -1426,8 +1489,10 @@
   <footer>
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">Hover<span>Lens</span></div>
-        <p class="footer-desc">The first universal AR subtitle device for cinema-goers. Designed in France for the world.</p>
+        <div class="footer-brand">
+          <img src="logotype0.jpg" alt="Hover Screen logo" class="logo-img">
+        </div>
+        <p class="footer-desc">The first universal AR subtitle device for cinema-goers.</p>
       </div>
       <div class="footer-col">
         <h4>Product</h4>
@@ -1442,11 +1507,11 @@
       <div class="footer-col">
         <h4>Contact</h4>
         <a onclick="showPage('feedback')">Send Feedback</a>
-        <a>hello@hoverlens.fr</a>
+        <a>team@hoverscreen.fr</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">© 2026 HoverLens. All rights reserved.</span>
+      <span class="footer-copy">© 2026 HoverScreen. All rights reserved.</span>
       <div class="footer-legal">
         <span>Privacy Policy</span>
         <span>Terms of Service</span>
@@ -1519,6 +1584,30 @@
     rating = 0;
     document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
   }
+
+  const images = [
+  "boxOffice.png",
+  "connection.png",
+  "1st_set.png",
+  "noSubtitles.png",
+  "stole.png"
+];
+
+let currentSlide = 0;
+
+function changeSlide(direction) {
+  currentSlide += direction;
+
+  if (currentSlide < 0) {
+    currentSlide = images.length - 1;
+  }
+
+  if (currentSlide >= images.length) {
+    currentSlide = 0;
+  }
+
+  document.getElementById("carousel-image").src = images[currentSlide];
+}
 </script>
 </body>
 </html>
