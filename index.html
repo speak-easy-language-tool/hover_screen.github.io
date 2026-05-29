@@ -190,7 +190,72 @@
     text-transform: uppercase; color: var(--purple-light);
     margin-bottom: 16px;
   }
+.reviews-carousel {
+  position: relative;
+  margin-top: 40px;
+}
 
+.reviews-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(124,58,237,0.9);
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.reviews-btn.prev {
+  left: -25px;
+}
+
+.reviews-btn.next {
+  right: -25px;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.review-card {
+  background: #ffffff;
+  border-radius: 32px;
+  padding: 36px;
+  box-shadow: 0 16px 42px rgba(17,24,39,0.07);
+}
+
+.review-name {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.verified {
+  color: #15803d;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.review-stars {
+  color: #1d4ed8;
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+.review-text {
+  color: #111827;
+  font-size: 1rem;
+  line-height: 1.7;
+}
   .section-title {
     font-family: var(--font-head); font-weight: 700;
     font-size: clamp(2.4rem, 4vw, 4rem);
@@ -1240,6 +1305,18 @@
 
 <!-- ═══════════════════════════════════════════════════════════ FEEDBACK -->
 <div id="page-feedback" class="page">
+    <section class="reviews-section">
+  <div class="section-eyebrow">Customer Reviews</div>
+  <h2 class="section-title">What users say about <span class="accent">HoverScreen</span></h2>
+
+  <div class="reviews-carousel">
+    <button class="reviews-btn prev" onclick="changeReviewSlide(-1)">❮</button>
+
+    <div class="reviews-grid" id="reviews-grid"></div>
+
+    <button class="reviews-btn next" onclick="changeReviewSlide(1)">❯</button>
+  </div>
+</section>
   <div class="feedback-wrap">
     <div class="section-eyebrow fade-up">Feedback & Contact</div>
     <h1 class="section-title fade-up delay-1">We'd love to<br><span class="accent">hear from you</span></h1>
@@ -1513,7 +1590,90 @@
       }, 10);
     });
   }
+const reviews = [
+  {
+    name: "Ann N.",
+    stars: 5,
+    text: "HoverScreen made the movie experience much easier for me."
+  },
+  {
+    name: "Pat",
+    stars: 4,
+    text: "Very practical and immersive. I could follow the dialogue."
+  },
+  {
+    name: "Sue",
+    stars: 5,
+    text: "A great solution for cinema accessibility."
+  },
+  {
+    name: "Andre P.",
+    stars: 4,
+    text: "The floating subtitles are much more comfortable."
+  },
+  {
+    name: "Dana A.",
+    stars: 5,
+    text: "Excellent experience for hearing-impaired viewers."
+  },
+  {
+    name: "Marc L.",
+    stars: 3,
+    text: "Good concept, but I would like more language options."
+  },
+  {
+    name: "Claire M.",
+    stars: 4,
+    text: "Very useful for tourists visiting France."
+  },
+  {
+    name: "Omar B.",
+    stars: 5,
+    text: "The best cinema accessibility solution I've tried."
+  },
+  {
+    name: "Lucas T.",
+    stars: 3,
+    text: "Works well overall, but the battery could last longer."
+  },
+  {
+    name: "Emma R.",
+    stars: 4,
+    text: "Comfortable and easy to use."
+  }
+];
 
+let reviewSlide = 0;
+const reviewsPerPage = 4;
+
+function renderReviews() {
+  const grid = document.getElementById("reviews-grid");
+  const start = reviewSlide * reviewsPerPage;
+  const visibleReviews = reviews.slice(start, start + reviewsPerPage);
+
+  grid.innerHTML = visibleReviews.map(review => `
+    <div class="review-card">
+      <div class="review-name">${review.name}</div>
+      <div class="verified">● Verified Buyer</div>
+      <div class="review-stars">
+  ${'★'.repeat(review.stars)}${'☆'.repeat(5-review.stars)}
+</div>
+      <p class="review-text">“${review.text}”</p>
+    </div>
+  `).join("");
+}
+
+function changeReviewSlide(direction) {
+  const maxSlide = Math.ceil(reviews.length / reviewsPerPage) - 1;
+  reviewSlide += direction;
+
+  if (reviewSlide < 0) reviewSlide = maxSlide;
+  if (reviewSlide > maxSlide) reviewSlide = 0;
+
+  renderReviews();
+}
+
+renderReviews();
   // ── STAR RATING ─────────────────────────────────────────────
   let rating = 0;
   document.querySelectorAll('.star').forEach(star => {
