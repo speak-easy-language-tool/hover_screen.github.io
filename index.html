@@ -722,7 +722,7 @@
   position: relative;
   width: 100%;
   max-width: 900px;
-  margin: 60px auto;
+  margin: 10px auto 0;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0,0,0,0.15);
@@ -865,19 +865,13 @@
     </div>
 <br>
       <div class="hero-eyebrow fade-up">AR Subtitle Technology · Made in France</div>
-     <div style="text-align: center; margin-top: 40px;">
-  <button
-    class="btn-primary"
-    onclick="showPage('products')"
-    style="
-      font-size: 1.2rem;
-      padding: 20px 50px;
-      border-radius: 14px;
-    "
-  >
-    Discover HoverScreen
-  </button>
-</div>
+      <div class="hero-btns fade-up delay-3">
+        <button class="btn-primary" onclick="showPage('products')">Discover HoverScreen</button>
+      <!--<div class="pill"><span class="pill-icon">👁️</span> Natural immersion</div>
+      <div class="pill"><span class="pill-icon">🌍</span> Real-time translation</div>
+      <div class="pill"><span class="pill-icon">🔒</span> Secure & private</div>
+      <div class="pill"><span class="pill-icon">🪶</span> Ultra-light & discreet</div>-->
+    </div>
   </section>
 
   <!-- STATS -->
@@ -900,21 +894,12 @@
     </div>
   </div>
 
-<div style="margin-top: 40px; text-align: center;margin-bottom: 40px;">
-  <video
-    autoplay
-    loop
-    muted
-    playsinline
-    style="
-      width: 50%;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 24px 70px rgba(17,24,39,0.14);
-    ">
-    <source src="video.mp4" type="video/mp4">
-  </video>
-</div>
+  <div class="carousel">
+  <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
+
+  <img id="carousel-image" src="boxOffice.png" alt="HoverScreen image">
+
+  <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
 </div>
 
   <!-- COMPARISON -->
@@ -922,8 +907,8 @@
     <div class="section-eyebrow">The difference is visible</div>
     <h2 class="section-title">Traditional subtitles<br>vs <span class="accent">Floating AR subtitles</span></h2>
     <p class="section-lead">Traditional subtitles force your eyes to leave the screen constantly — causing fatigue and breaking immersion. HoverScreen keeps everything in your natural field of vision.</p>
-    <button class="btn-primary" onclick="showPage('tech')">How it works</button>
     <img src="comparison.png" alt="HoverScreen comparison" class="comparison-img">
+    <button class="btn-ghost" onclick="showPage('tech')">How it works</button>
   </section>
 
   <div class="divider"></div>
