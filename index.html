@@ -188,10 +188,13 @@
   section { padding: 100px 80px; }
 
   .section-eyebrow {
-    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--purple-light);
-    margin-bottom: 16px;
-  }
+  font-size: 0.72rem; 
+  font-weight: 600; 
+  letter-spacing: 0.14em;
+  text-transform: uppercase; 
+  color: var(--purple-light);
+  margin-bottom: 16px;
+}
 .reviews-carousel {
   position: relative;
   margin-top: 40px;
@@ -485,11 +488,6 @@
   .story-section { padding: 40px 80px 80px; background: var(--deep); }
   .story-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
   .story-text p { font-size: 1rem; color: var(--grey); line-height: 1.85; margin-bottom: 20px; }
-  .story-visual {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; padding: 48px;
-    display: flex; flex-direction: column; gap: 24px;
-  }
   .timeline-item { display: flex; gap: 20px; }
   .timeline-dot {
     width: 12px; height: 12px; border-radius: 50%; background: var(--purple);
@@ -545,6 +543,29 @@
   .footer-legal span { font-size: 0.78rem; color: var(--grey); cursor: pointer; }
   .footer-legal span:hover { color: var(--white); }
 
+  .purple-bullets {
+  /* Shifts the entire list to the right */
+  padding-left: 40px; 
+}
+
+.purple-bullets li::marker {
+  color: #7c3aed;
+  /* Makes the bullet points larger */
+  font-size: 1.5rem; 
+}
+
+.purple-bullets li {
+  /* Creates space between the larger bullet and the text */
+  padding-left: 10px; 
+  
+  /* Adds vertical separation between each list item */
+  margin-bottom: 16px; 
+}
+
+/* Optional: Removes the extra margin from the very last item */
+.purple-bullets li:last-child {
+  margin-bottom: 0;
+}
   /* ─── DIVIDER ─────────────────────────────────────────────── */
   .divider { height: 1px; background: var(--border); margin: 0 80px; }
 
@@ -698,6 +719,20 @@
     color: #000000;
   }
 
+.story-text-container {
+  width: 100%;
+  max-width: 650px;    /* Keeps lines at an ideal reading length */
+  margin: 0 auto;      /* Re-aligns the block box back to center */
+  text-align: left;    /* Keeps the actual sentences reading left-to-right */
+}
+
+.story-layout-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the text container and eyebrow horizontally */
+  width: 100%;
+}
+
   .comparison-section,
   .story-section,
   .values-section,
@@ -731,8 +766,7 @@
   .product-card,
   .pricing-card,
   .team-card,
-  .value-card,
-  .story-visual {
+  .value-card {
     background: #ffffff !important;
     border: 1px solid rgba(17,24,39,0.09) !important;
     box-shadow: 0 16px 42px rgba(17,24,39,0.07) !important;
@@ -1455,56 +1489,31 @@
 
   <!-- STORY -->
   <section class="story-section">
+    <div class="story-layout-centered">
     <div class="section-eyebrow">Our story</div>
-    <div class="story-layout">
+    <div class="story-text-container">
       <div class="story-text">
-        <h2 class="section-title" style="margin-bottom: 28px;">From frustration<br>to <span class="accent">invention</span></h2>
-        <p style="color: black;">France welcomes over 102 million tourists every year — the highest of any country in the world. Yet most of them can't follow a film in a local cinema. Meanwhile, 1 in 4 French adults live with some degree of hearing impairment. Traditional subtitle solutions force the eyes down, breaking the immersion that makes cinema so powerful.</p>
-        <p style="color: black;">HoverScreen started as a student project — a question: what if subtitles moved with you instead of sitting fixed at the bottom of a screen? Two years of prototyping, sensor testing, and AI integration later, we have an answer.</p>
-        <p style="color: black;">We are proud to be building a French tech company at the intersection of culture, accessibility, and innovation — supported by France 2030 and aligned with l'exception culturelle.</p>
+        <h2 class="section-title" style="margin-bottom: 28px;"><span class="accent">Breaking the Language Barrier</span><br>in Movie Theaters</h2>
+        <p style="color: black;">Every year, France proudly welcomes over 102 million tourists and foreign visitors—the highest number of any country in the world. Yet, for this massive international audience of travelers, an invisible wall stands at the cinema door: most of them simply cannot follow a film in a local theater.</p>
+        <p style="color: black;">At the same time, language isn’t the only barrier. One in four French adults live with some degree of hearing impairment, searching for a viable solution for hearing-impaired people in cinema halls.</p>
+        <p style="color: black;">Until now, the traditional answer has been open captions or side screens. But standard cinema translation technology is broken. Traditional subtitle solutions force your eyes down, constantly moving away from the action. This causes immense visual distraction, forces you to miss parts of the scene, and leads to severe eye strain. It completely breaks the immersion that makes cinema so powerful.</p>
+        <p style="color: black;">Traditional subtitles drag your focus away, resulting in more fatigue and less immersion. Cinema spaces should build connections, not compromise the movie's cinematography.</p>
+        <h2 class="section-title" style="margin-bottom: 28px;">What if <br>Subtitles Could <span class="accent">Float?</span></h2>
+        <p style="color: black;">HoverScreen started as a passionate student project driven by a simple, disruptive question: What if subtitles moved with you instead of sitting fixed at the bottom of a screen? We wanted to know how to stop missing details while reading subtitles, allowing an immersive movie-goer or hardcore cinephile to enjoy the original actor voices in cinema with real-time translation.</p>
+        <p style="color: black;">Two years of intense prototyping, sensor testing, and advanced AI translation integration later, we found our answer: smart subtitle glasses.</p>
+        <p style="color: black;">Through our proprietary smart cinema technology, we developed floating subtitles that don’t block the movie cinematography. By utilizing lightweight AR subtitle glasses, text dynamically aligns to your natural field of vision. It is the ultimate multilingual cinema experience for tourists and local audiences alike, offering:</p>
+         <ul class="purple-bullets">
+           <li><strong>Natural Focus:</strong> Subtitles stay perfectly synchronized in your field of view.</li>
+           <li><strong>Prescription-Friendly Smart Lenses:</strong> Our ultra-light clip-on device (HoverLens) fits seamlessly over existing eyewear</li>
+           <li><strong>Reduced Eye Strain:</strong> Specially engineered smart eyewear designed to eliminate visual fatigue.</li>
+         </ul>
       </div>
-      <div class="story-visual">
-        <h3 style="font-family: var(--font-head); font-weight: 700; font-size: 1rem; margin-bottom: 8px; color: var(--grey);">Our journey</h3>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div>
-            <div class="timeline-year">2025</div>
-            <div class="timeline-event">Idea born from personal experience of subtitle fatigue in a Nice cinema</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div>
-            <div class="timeline-year">2026</div>
-            <div class="timeline-event">First prototype of HoverScreen clip-on with basic AR optics and BLE</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div>
-            <div class="timeline-year">Mid 2026</div>
-            <div class="timeline-event">HoverStation AI translation engine reaches sub-15ms latency</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div>
-            <div class="timeline-year">Late 2026</div>
-            <div class="timeline-event">Value proposition validated with cinema operators in Paris & Lyon</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div>
-            <div class="timeline-year">2027</div>
-            <div class="timeline-event">Website launch · seeking first cinema partners · applying for CNC funding</div>
-          </div>
-        </div>
-      </div>
+    </div>
     </div>
   </section>
 
   <!-- TEAM -->
+   <!--
   <section class="team-section">
     <div class="section-eyebrow">The team</div>
     <h2 class="section-title">Meet the people<br>behind <span class="accent">HoverScreen</span></h2>
@@ -1547,6 +1556,7 @@
       </div>
     </div>
   </section>
+-->
 
   <!-- VALUES -->
   <section class="values-section">
@@ -1554,24 +1564,20 @@
     <h2 class="section-title">Our <span class="accent">values</span></h2>
     <div class="values-grid">
       <div class="value-card">
-        <div class="value-icon">🌍</div>
-        <h4>Inclusion First</h4>
-        <p>Cinema is a universal language. Our technology ensures no one is left out — whether by hearing loss, foreign language, or disability.</p>
+        <h4>Inclusivity & Accessibility First</h4>
+        <p>We break down communication barriers so that international travelers and audiences with hearing impairments can share the exact same cinematic experience.</p>
       </div>
       <div class="value-card">
-        <div class="value-icon">🔒</div>
         <h4>Privacy by Design</h4>
-        <p>We process everything locally. No data leaves the cinema. No profiles, no cloud, no surveillance. Your voice is never recorded.</p>
+        <p>We believe innovation shouldn't cost your privacy. Our smart eyewear features no cameras and no microphones, ensuring total data security and compliance with strict EU safety standards.</p>
       </div>
       <div class="value-card">
-        <div class="value-icon">🌱</div>
         <h4>Sustainable Technology</h4>
         <p>Shared devices, long lifecycles, REEN-compliant durability, recycled packaging. We build tech that respects the planet.</p>
       </div>
       <div class="value-card">
-        <div class="value-icon">🇫🇷</div>
-        <h4>Proud to be French</h4>
-        <p>Rooted in l'exception culturelle. We support French cinema and the creative ecosystem — from Cannes to local independent theatres.</p>
+        <h4>Artistic Immersion</h4>
+        <p>We design technology that respects the craft of filmmaking—keeping your focus on the action, protecting the cinematography, and preserving the actors' original voices.</p>
       </div>
     </div>
   </section>
