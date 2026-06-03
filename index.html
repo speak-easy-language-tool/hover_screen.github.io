@@ -1207,10 +1207,19 @@
     <h2 class="section-title">What makes us <span class="accent">better</span></h2>
     
     <div class="carousel">
-      <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
-      <img id="carousel-image" src="hoverScreenSharedGlasses.webp" alt="HoverScreen image">
-      <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
+  <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
+  
+  <div class="carousel-content">
+    <img id="carousel-image" src="hoverScreenSharedGlasses.webp" alt="Moviegoers choosing cinema subtitle glasses at the theater box office">
+    
+    <div class="carousel-caption-container">
+      <h3 id="carousel-title">Your choice Your experience</h3>
+      <p id="carousel-caption">Choose how you want to enjoy the film: Full glasses or clip-on. Tell the box office host your preferred language for instant, real-time translation.</p>
     </div>
+  </div>
+
+  <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
+</div>
   </section>
   <section style="background: var(--black); padding: 100px 80px;">
     <div class="section-eyebrow">The system in</div>
@@ -1770,14 +1779,35 @@ renderReviews();
     document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
   }
 
-  const images = [
-  "hoverScreenSharedGlasses.webp",
-  "hoverScreenWirelessSubtitle.webp",
-  "hoverScreenSubtitleAdjusted.webp",
-  "hoverScreenPrivacySafety.webp"
+// Upgraded carousel array containing image paths, SEO alt text, titles, and descriptions
+const carouselData = [
+  {
+    src: "hoverScreenSharedGlasses.webp",
+    alt: "Moviegoers choosing cinema subtitle glasses at the theater box office, showcasing options for integrated full glasses or prescription friendly smart lenses.",
+    title: "Your choice. Your experience.",
+    caption: "Choose how you want to enjoy the film: Full glasses or clip-on. Tell the box office host your preferred language for instant, real-time translation."
+  },
+  {
+    src: "hoverScreenWirelessSubtitle.webp",
+    alt: "Theater audience using smart eyewear to stream localized real-time translated subtitles simultaneously from a central AI translation server.",
+    title: "Connected. Together.",
+    caption: "Your subtitles, your eyes only. HoverScreen broadcasts real-time translations directly to individual HoverLens users, keeping the theater screen completely clear and the original audio perfectly preserved."
+  },
+  {
+    src: "hoverScreenSubtitleAdjusted.webp",
+    alt: "Close-up view through AR subtitle glasses showing real-time translated subtitles dynamically adjusting to the theater screen background.",
+    title: "Automatically adjusted.",
+    caption: "The subtitles move with you, dynamically aligning to your field of vision. Features dynamic color adaptation for high legibility across all backgrounds and seamless synchronization."
+  },
+  {
+    src: "hoverScreenPrivacySafety.webp",
+    alt: "HoverScreen hardware certifications displaying compliance with EU AI Act, eco-friendly sustainable packaging, and microphone-free hardware privacy design.",
+    title: "Technology you can trust.",
+    caption: "Because your safety, health, and privacy matter. No microphone. No camera. Ever. Our hardware uses safe low-blue-light displays and strictly follows French and EU safety regulations."
+  }
 ];
 
-// Simple script to toggle detail visibility on mobile or click
+// Simple script to toggle detail visibility on mobile or click (Unchanged)
 document.querySelectorAll('.impact-table td').forEach(cell => {
   cell.addEventListener('click', () => {
     cell.classList.toggle('active');
@@ -1790,14 +1820,26 @@ function changeSlide(direction) {
   currentSlide += direction;
 
   if (currentSlide < 0) {
-    currentSlide = images.length - 1;
+    currentSlide = carouselData.length - 1;
   }
 
-  if (currentSlide >= images.length) {
+  if (currentSlide >= carouselData.length) {
     currentSlide = 0;
   }
 
-  document.getElementById("carousel-image").src = images[currentSlide];
+  // Target item configuration
+  const currentItem = carouselData[currentSlide];
+
+  // 1. Update image source
+  const imgElement = document.getElementById("carousel-image");
+  imgElement.src = currentItem.src;
+
+  // 2. Update alt attribute (Crucial web strategy benchmark for SEO crawlers)
+  imgElement.alt = currentItem.alt;
+
+  // 3. Update the matching text copy layout
+  document.getElementById("carousel-title").innerText = currentItem.title;
+  document.getElementById("carousel-caption").innerText = currentItem.caption;
 }
 </script>
 </body>
